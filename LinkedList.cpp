@@ -7,15 +7,15 @@ struct Node {
     Node(int val): data(val), next(nullptr) {}
 };
 
-Node* head;
-int size;
+Node* head = nullptr;
+
 //Ham truy cap: O(n)
 int getNode(int index) {
-    if(index<0||index>=size) return -1;
     Node*q = head;
     for (int i=0; i<index; i++) {
         q=q->next;
     }
+    if(q == nullptr) return -1;
     return q->data;
 }
 //Chen phan tu vao dau: O(1)
@@ -39,13 +39,9 @@ void addTail(int data) {
 }
 //Chen vao vi tri i: O(n)
 void addIndex(int index, int data) {
-    if(index<0||index>size) return;
+    if(index<0) return;
     if(index==0) {
         addHead(data);
-        return;
-    }
-    if(index==size) {
-        addTail(data);
         return;
     }
     Node* newNode = new Node(data);
@@ -53,12 +49,13 @@ void addIndex(int index, int data) {
     for(int i=0; i<index-1; i++) {
         q=q->next;
     }
+    if(q == nullptr) return;
     newNode->next = q->next;
     q->next = newNode;
 }
 //Xoa vi tri i: O(n)
 void deleteIndex(int index) {
-    if(index<0||index>=size) return;
+    if(index<0||head==nullptr) return;
     if(index==0) {
         Node*q = head;
         head = head->next;
@@ -69,6 +66,7 @@ void deleteIndex(int index) {
     for(int i=0; i<index-1; i++) {
         q=q->next;
     }
+    if(q->next==nullptr) return;
     Node* temp = q->next;
     q->next = temp->next;
     delete temp;
