@@ -1,107 +1,119 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-struct Node {
-    int data;
-    Node* next;
-    Node(int val): data(val), next(nullptr) {}
+class LinkedList {
+private:
+    struct Node {
+        int data;
+        Node* next;
+        Node(int val): data(val), next(nullptr){}
+    };
+    Node* head;
+
+public:
+    LinkedList() {
+        head = nullptr;
+    }
+    //Truy cap phan tu: O(n)
+    int getNode(int index) {
+        Node* q = head;
+        for(int i=0; i<index; i++) {
+            q=q->next;
+        }
+        if(q==nullptr) return -1;
+        return q->data;
+    }
+    //Chen phan tu vao dau: O(1)
+    void addHead(int val) {
+        Node* new_node = new Node(val);
+        new_node->next = head;
+        head = new_node;
+    }
+    //Chen phan tu vao cuoi: O(n)
+    void addTail(int val) {
+        Node* new_node = new Node(val);
+        if(head==nullptr) {
+            head = new_node;
+            return;
+        }
+        Node* q = head;
+        while(q->next) {
+            q=q->next;
+        }
+        q->next = new_node;
+    }
+    //Chen vao vi tri i: O(n)
+    void addAtIndex(int index, int val) {
+        if(index<0) return;
+        if(index==0) {
+            addHead(val);
+            return;
+        }
+        Node*new_node = new Node(val);
+        Node*q = head;
+        for(int i=0; i<index-1; i++) {
+            q=q->next;
+        }
+        if(q==nullptr) return;
+        new_node->next = q->next;
+        q->next = new_node;
+    } 
+    //Xoa dau: O(1)
+    void deleteHead() {
+        Node*temp = head;
+        head = head->next;
+        delete temp;
+    }
+    //Xoa vi tri i: O(n)
+    void deleteAtIndex(int index) {
+        if(index<0) return;
+        if(index==0) {
+            deleteHead();
+            return;
+        } 
+        Node*q = head;
+        for(int i=0; i<index-1; i++) {
+            q=q->next;
+        }
+        if(q==nullptr) return;
+        Node*temp = q->next;
+        q->next = temp->next;
+        delete temp;
+    }
+    //Duyet xuoi + nguoc: O(n)
+    void printForward() {
+        Node* q = head;
+        while(q) {
+            cout<<q->data<<" ";
+            q=q->next;
+        }
+        cout<<endl;
+    }
+    void reverseList(Node* q) {
+        if(q==nullptr) return;
+        reverseList(q->next);
+        cout<<q->data<<" ";
+    }
+    void printBackward() {
+        reverseList(head);
+        cout<<endl;
+    }
 };
 
-Node* head = nullptr;
-
-//Ham truy cap: O(n)
-int getNode(int index) {
-    Node*q = head;
-    for (int i=0; i<index; i++) {
-        q=q->next;
-    }
-    if(q == nullptr) return -1;
-    return q->data;
-}
-//Chen phan tu vao dau: O(1)
-void addHead(int data) {
-    Node* newNode = new Node(data);
-    newNode->next = head;
-    head = newNode;
-}
-//Chen phan tu vao cuoi: O(n)
-void addTail(int data) {
-    Node* newNode = new Node(data);
-    if(!head) {
-        head = newNode;
-        return;
-    }
-    Node*q = head;
-    while(q->next) {
-        q=q->next;
-    }
-    q->next = newNode;
-}
-//Chen vao vi tri i: O(n)
-void addIndex(int index, int data) {
-    if(index<0) return;
-    if(index==0) {
-        addHead(data);
-        return;
-    }
-    Node* newNode = new Node(data);
-    Node* q = head;
-    for(int i=0; i<index-1; i++) {
-        q=q->next;
-    }
-    if(q == nullptr) return;
-    newNode->next = q->next;
-    q->next = newNode;
-}
-//Xoa vi tri i: O(n)
-void deleteIndex(int index) {
-    if(index<0||head==nullptr) return;
-    if(index==0) {
-        Node*q = head;
-        head = head->next;
-        delete q;
-        return;
-    }
-    Node* q = head;
-    for(int i=0; i<index-1; i++) {
-        q=q->next;
-    }
-    if(q->next==nullptr) return;
-    Node* temp = q->next;
-    q->next = temp->next;
-    delete temp;
-}
-//Duyet xuoi: O(n)
-void printForward() {
-    Node*q = head;
-    while(q) {
-        cout << q->data << " ";
-        q=q->next;
-    }
-    cout<<endl;
-}
-//Duyet nguoc: O(n)
-void printBackward(Node* q) {
-    if (!q) return;
-    printBackward(q->next);
-    cout << q->data << " ";
-}
-
 int main() {
-    addHead(1);
-    addHead(2);
-    addTail(10);
-    addTail(15);
-    addIndex(2,12);
+    LinkedList l;
+    l.addHead(7);       
+    l.addHead(6);       
+    l.addTail(10);      
+    l.addTail(15);      
+    l.addAtIndex(2,12);
     cout << "Danh sach xuoi: ";
-    printForward();
-    cout<<endl;
-    cout << "2th node: " << getNode(2); 
-    deleteIndex(2);
-    cout<<endl;
-    cout << "Danh sach sau khi xoa: ";
-    printForward();
+    l.printForward();
     cout << "Danh sach nguoc: ";
-    printBackward(head);
-    cout << endl;
+    l.printBackward();
+    cout << "2th node: " << l.getNode(2) << endl;
+    l.deleteAtIndex(2); 
+    l.deleteHead();     
+    cout << "Danh sach sau khi xoa: ";
+    l.printForward();   
 }
