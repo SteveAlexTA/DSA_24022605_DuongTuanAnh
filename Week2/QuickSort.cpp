@@ -1,23 +1,25 @@
 #include<bits/stdc++.h>
 using namespace std;
-//Do phuc tap: O(nlogn), worst O(n^2)
-void quickSort(vector<int>&arr, int low, int high) {
-    if (low>=high) return;
-    int l = low;
-    int r = high;
-    int mid = (l+r)/2;
-    int pivot = arr[mid];
-    while (l<=r) {
-        while (arr[l]<pivot) l++;
-        while (arr[r]>pivot) r--;
-        if (l<=r) {
-            swap(arr[l], arr[r]);
-            l++;
-            r--;
+//Do phuc tap: O(nlogn) (pivot deu), worst O(n^2) (pivot lech)
+int partition(vector<int>& a, int low, int high) {
+    int pivot = a[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (a[j] < pivot) {
+            i++;
+            swap(a[i], a[j]);
         }
     }
-    quickSort(arr, low, r);
-    quickSort(arr, l, high);
+    swap(a[i+1], a[high]);
+    return i + 1;
+}
+
+void quickSort(vector<int>& a, int low, int high) {
+    if (low < high) {
+        int p = partition(a, low, high);
+        quickSort(a, low, p-1);
+        quickSort(a, p+1, high);
+    }
 }
 
 int main() {

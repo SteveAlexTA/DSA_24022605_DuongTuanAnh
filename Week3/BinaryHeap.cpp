@@ -9,7 +9,7 @@ private:
 public:
     MaxHeap(): n(0) {}
 
-    void heapify(int i) {
+    void heapifyDown(int i) { // O(logn)
         int left = 2*i+1;
         int right = 2*i+2;
         int max_idx = i;
@@ -21,28 +21,34 @@ public:
         }
         if (max_idx != i) {
             swap(list[i], list[max_idx]);
-            heapify(max_idx);
+            heapifyDown(max_idx);
+        }
+    }
+
+    void heapifyUp(int i) { // O(logn)
+        while (i > 0) {
+            int parent = (i-1)/2;
+            if (list[i] > list[parent]) {
+                swap(list[i], list[parent]);
+                i = parent;
+            } else {
+                break;
+            }
         }
     }
 
     void insert(int val) {
         if(n >= 100) return;
         list[n] = val;
-        int i = n;
-        while (i > 0 && list[i] > list[(i-1)/2]) {
-            swap(list[i], list[(i-1)/2]);
-            i = (i - 1) / 2;
-        }
+        heapifyUp(n);
         n++;
     }
 
-    int delMax() {
-        if (isEmpty()) return -1;
-        int maxVal = list[0];
+    void delMax() {
+        if (isEmpty()) return;
         swap(list[0], list[n-1]);
         n--;
-        heapify(0);
-        return maxVal;
+        heapifyDown(0);
     }
 
     bool isEmpty() {
@@ -67,10 +73,10 @@ private:
 public:
     MinHeap(): n(0) {}
 
-    void heapify(int i) {
-        int left = 2*i+1;
-        int right = 2*i+2;
+    void heapifyDown(int i) { // O(logn)
         int min_idx = i;
+        int left = 2*i+1; 
+        int right = 2*i+2;
         if (left < n && list[left] < list[min_idx]) {
             min_idx = left;
         }
@@ -79,28 +85,33 @@ public:
         }
         if (min_idx != i) {
             swap(list[i], list[min_idx]);
-            heapify(min_idx);
+            heapifyDown(min_idx);
+        }
+    }
+
+    void heapifyUp(int i) { // O(logn)
+        while (i > 0) {
+            if (list[i] < list[(i-1)/2]) {
+                swap(list[i], list[(i-1)/2]);
+                i = (i-1)/2;
+            } else {
+                break;
+            }
         }
     }
 
     void insert(int val) {
         if (n>=100) return;
         list[n] = val;
-        int i = n;
-        while (i > 0 && list[i] < list[(i-1)/2]) {
-            swap(list[i], list[(i-1)/2]);
-            i = (i-1)/2;
-        }
+        heapifyUp(n);
         n++;
     }
 
-    int delMin() {
-        if(isEmpty()) return -1;
-        int minVal = list[0];
+    void delMin() {
+        if(isEmpty()) return;
         swap(list[0], list[n-1]);
         n--;
-        heapify(0);
-        return minVal;
+        heapifyDown(0);
     }
 
     bool isEmpty() {
