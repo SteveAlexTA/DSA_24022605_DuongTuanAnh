@@ -65,7 +65,7 @@ public:
         delete curr;
     }
 
-    void print() {
+    void print() { // O(n)
         for (int i = 0; i < size; i++) {
             cout << i << ": ";
             Node* curr = htable[i];
